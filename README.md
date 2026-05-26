@@ -1,2 +1,2 @@
-# ZipfT
+# Zipfslawmp
 Zipf's law
