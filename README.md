@@ -1,0 +1,2 @@
+# ZipfT
+Zipf's law
