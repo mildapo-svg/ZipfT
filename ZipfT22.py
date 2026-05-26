@@ -193,8 +193,9 @@ def remove_gutenberg_metadata(text: str) -> str:
             
     return text
 
-def get_cleaned_text(text: str) -> str:
-    text = remove_gutenberg_metadata(text)
+def get_cleaned_text(text: str, remove_gutenberg: bool) -> str:
+    if remove_gutenberg:
+        text = remove_gutenberg_metadata(text)
     text = text.lower()
     # Zachovej základní latinku + česká a anglická diakritika
     text = re.sub(r"[^a-z\u00c0-\u024f\s]", " ", text)
@@ -607,6 +608,12 @@ else:
 
 st.sidebar.subheader("Předzpracování textu")
 
+remove_gutenberg_option = st.sidebar.checkbox(
+    "Odstranit metadata GUTENBERG",
+    value=True,
+    help="Pokud je zapnuto, automaticky se z analýzy vynechá úvodní a závěrečný text z Project Gutenberg."
+)
+
 remove_stopwords = st.sidebar.checkbox(
     "Odstranit stop slova (funkční slova)",
     value=False,
@@ -735,8 +742,8 @@ if not text:
 # ============================================================
 
 @st.cache_data(show_spinner=False)
-def get_base_tokens(text: str, method: str, language: str, model_path: str | None) -> list[tuple[str, str]]:
-    text = get_cleaned_text(text)
+def get_base_tokens(text: str, method: str, language: str, model_path: str | None, remove_gutenberg: bool) -> list[tuple[str, str]]:
+    text = get_cleaned_text(text, remove_gutenberg)
     
     if method == "spaCy":
         nlp = load_spacy_model(language)
@@ -797,7 +804,8 @@ if text:
                 text=text,
                 method=method,
                 language=language,
-                model_path=model_path
+                model_path=model_path,
+                remove_gutenberg=remove_gutenberg_option
             )
             tokens, df, regression, k_constant = filter_and_analyze(
                 base_tokens=base_tokens,
