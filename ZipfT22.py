@@ -470,8 +470,8 @@ def render_first_zipf(df: pd.DataFrame, regression, k_constant: float) -> None:
         f"Sklon regresní přímky = **{regression.slope:.3f}** (ideál: −1,0)."
     )
     st.caption("ℹ️ Konstanta k vyjadřuje průměrný součin četnosti a ranku. Čím blíže je sklon k hodnotě −1, tím lépe text odpovídá Zipfově distribuci.")
-    st.plotly_chart(build_frequency_fig(df), use_container_width=True)
-    st.plotly_chart(build_zipf_fig(df, regression), use_container_width=True)
+    st.plotly_chart(build_frequency_fig(df), width="stretch")
+    st.plotly_chart(build_zipf_fig(df, regression), width="stretch")
 
 
 def render_second_zipf(df: pd.DataFrame) -> None:
@@ -489,13 +489,13 @@ def render_second_zipf(df: pd.DataFrame) -> None:
         f"Čím stabilnější je tento součin napříč frekvenčními hladinami, tím lépe zákon platí."
     )
 
-    st.plotly_chart(build_second_zipf_fig(df), use_container_width=True)
+    st.plotly_chart(build_second_zipf_fig(df), width="stretch")
 
     st.markdown(
         "**Ověření:** Pokud 2. Zipfův zákon platí, měl by být součin $a \\times f^2$ přibližně "
         "konstantní pro všechny frekvenční hladiny. Graf níže ukazuje, jak moc se tato hodnota mění."
     )
-    st.plotly_chart(build_second_zipf_verification_fig(df), use_container_width=True)
+    st.plotly_chart(build_second_zipf_verification_fig(df), width="stretch")
 
 
 def render_third_zipf(df: pd.DataFrame) -> None:
@@ -534,7 +534,7 @@ def render_third_zipf(df: pd.DataFrame) -> None:
         title="Ilustrativní křivka 3. Zipfova zákona: m / √f = k  (k = 1)",
     )
     fig_third.update_layout(height=400)
-    st.plotly_chart(fig_third, use_container_width=True)
+    st.plotly_chart(fig_third, width="stretch")
 
     # Tabulka: 20 nejfrekventovanějších slov s odhadem m
     # Odhad m = k₃ * √f; jde o ilustraci relativního pořadí, nikoliv absolutní hodnotu.
@@ -544,7 +544,7 @@ def render_third_zipf(df: pd.DataFrame) -> None:
         "**20 nejfrekventovanějších slov s ilustrativním odhadem počtu významů** "
         "(dle 3. Zipfova zákona — skutečné hodnoty vyžadují slovník):"
     )
-    st.dataframe(df_polysemy, use_container_width=True)
+    st.dataframe(df_polysemy, width="stretch")
 
 
 def render_interpretation(regression) -> None:
@@ -604,7 +604,7 @@ else:
         "URL adresa k TXT souboru",
         placeholder="https://www.gutenberg.org/cache/epub/5200/pg5200.txt"
     )
-    load_url_btn = st.sidebar.button("☁️ Stáhnout text z URL", use_container_width=True)
+    load_url_btn = st.sidebar.button("☁️ Stáhnout text z URL", width="stretch")
 
 st.sidebar.subheader("Předzpracování textu")
 
@@ -664,10 +664,10 @@ top_n = st.sidebar.slider(
 st.sidebar.divider()
 st.sidebar.subheader("🛠️ Akce")
 
-if st.sidebar.button("🔄 Přepočítat", use_container_width=True):
+if st.sidebar.button("🔄 Přepočítat", width="stretch"):
     st.rerun()
 
-if st.sidebar.button("🗑️ Vymazat cache", use_container_width=True):
+if st.sidebar.button("🗑️ Vymazat cache", width="stretch"):
     st.cache_resource.clear()
     if hasattr(st, "cache_data"):
         st.cache_data.clear()
@@ -676,7 +676,7 @@ if st.sidebar.button("🗑️ Vymazat cache", use_container_width=True):
         del st.session_state["cached_url_text"]
     st.rerun()
 
-if st.sidebar.button("🖨️ Tisknout", use_container_width=True):
+if st.sidebar.button("🖨️ Tisknout", width="stretch"):
     import streamlit.components.v1 as components
     components.html("<script>window.parent.print();</script>", height=0)
 
@@ -833,7 +833,7 @@ if text:
         "Sloupce: **slovo** (lemma/tvar), **četnost** (f — absolutní počet výskytů), "
         "**rank** (r — pořadí podle četnosti), **log(rank)**, **log(četnost)**."
     )
-    st.dataframe(df.head(top_n), use_container_width=True)
+    st.dataframe(df.head(top_n), width="stretch")
 
     csv = df.to_csv(index=False).encode("utf-8")
     st.download_button(
