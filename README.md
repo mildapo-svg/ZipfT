@@ -1,0 +1,2 @@
+# Zipfslawmp
+Zipf's law
